@@ -5,4 +5,5 @@ const Cart=new mongoose.Schema({
     color:String,
     price:String
 })
-export default Cart;
+const cart1=mongoose.model("cart1",Cart);
+export default cart1;

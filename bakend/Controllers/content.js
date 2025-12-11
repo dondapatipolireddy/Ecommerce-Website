@@ -9,7 +9,7 @@ export const Get=(Model)=>async(req,res)=>{
 }
 export const GetOne=(Model)=>async(req,res)=>{
     try{
-        const data = await Model.findById();
+        const data = await Model.findById(req.params.id);
         if (!data){
             res.status(404).send({message:"Enter data Not availble (or) searching invalid data"})
         }
@@ -21,12 +21,12 @@ export const GetOne=(Model)=>async(req,res)=>{
 }
 export const Post=(Model)=>async(req,res)=>{
     try{
-        const data=new Model(req.data);
-        await Model.save(data);
-        res.status(404).send({message:"data inserted successfully",Data:data});
+        const data=new Model(req.body);
+        await data.save();
+        res.status(201).send({message:"data inserted successfully",Data:data});
     }
     catch(error){
-        res.send({message:"Internal server error",Data:data});
+        res.status(500).send({message:"Internal server error"});
     }
 }
 export const Put=(Model)=>async(req,res)=>{
