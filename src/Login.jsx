@@ -5,6 +5,7 @@ export const Login=()=>{
     const [Email,newEmail]=useState("")
     const [Password,newPass]=useState("")
     const [Role,newRole]=useState("")
+    const [login,setLogin]=useState("")
     let data;
  const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,12 +16,8 @@ export const Login=()=>{
             password: Password,
             role: Role
         });
-        data=response.data
-        console.log("success", response.data);
-        return(
-            <h1>success,</h1>
-        )
-
+        localStorage.setItem("token",response.data.token);
+        setLogin(response.data.message)
     } catch (error) {
         console.log("error", error.response?.data || error.message);
     }
@@ -56,6 +53,11 @@ export const Login=()=>{
                         <td colSpan="2" align="center"><button type="submit" className=" bg-blue-600 p-2 rounded-full hover:bg-violet-700 active:bg-violet-500 focus:outline-2 focus:outline-offset-2 hover:outline-violet-500">submit</button></td>
                     </tr>
                     <tr>{data}</tr>
+                    <tr className="center">
+                        <td colspan="2">{login && (
+                            <p className="">{login}</p>
+                        )}</td>
+                    </tr>
                 </table>
                 
             </form>

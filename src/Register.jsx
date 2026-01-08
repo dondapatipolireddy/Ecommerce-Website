@@ -5,6 +5,7 @@ export const Register=()=>{
     const [Email,newEmail]=useState("")
     const [Password,newPass]=useState("")
     const [Role,newRole]=useState("")
+    const [Register,setR]=useState("")
  const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -15,17 +16,11 @@ export const Register=()=>{
             password: Password,
             role: Role
         });
-
-        console.log("success", response.data);
-        return(
-            <h1>success</h1>
-        )
-
+        setR(response.data.message)
     } catch (error) {
         console.log("error", error.response?.data || error.message);
      }
  }
-
     return(
         <>
             <form method="POST" onSubmit={handleSubmit}>
@@ -55,7 +50,11 @@ export const Register=()=>{
                     <tr>
                         <td colSpan="2" align="center"><button type="submit" className=" bg-blue-600 p-2 rounded-full hover:bg-violet-700 active:bg-violet-500 focus:outline-2 focus:outline-offset-2 hover:outline-violet-500">submit</button></td>
                     </tr>
-                    
+                    <tr className="center">
+                        <td colspan="2">{Register && (
+                            <p className="">{Register}</p>
+                        )}</td>
+                    </tr>
                 </table>
                 
             </form>
