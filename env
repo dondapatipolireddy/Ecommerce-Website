@@ -1,0 +1,4 @@
+export const PORT=5000
+export const url="mongodb://localhost:27017"
+const SECRET_KEY="12340973788DSDSDJGJHSDHSKDHLJWLKWJLKWEJ"
+export default SECRET_KEY;
