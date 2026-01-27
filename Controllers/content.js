@@ -23,6 +23,7 @@ export const GetOne=(Model)=>async(req,res)=>{
     }
 }
 export const Post=(Model)=>async(req,res)=>{
+    
     if(Model.modelName==="Admins"){
         const {AdminName,email,password}=req.body;  
         if (!AdminName || !email || !password){
@@ -46,17 +47,44 @@ export const Post=(Model)=>async(req,res)=>{
         }
     }
     else{
-    try{
-        const data=new Model(req.body);
-        await data.save();
-        res.status(201).send({message:"data inserted successfully",Data:data});
+    try {
+            const { productId } = req.body;
+
+            // 🔍 Check if product already exists in user's cart
+            const alreadyAdded = await Model.findOne({
+            User: req.User,
+            productId: productId
+            });
+
+            if (alreadyAdded) {
+            return res.status(409).send({
+                message: "Product already added to cart"
+            });
+            }
+
+            // ➕ Add new cart item
+            const data = {
+            ...req.body,
+            User: req.User
+            };
+
+            const data1 = new Model(data);
+            await data1.save();
+
+            res.status(201).send({
+            message: "Product added to cart successfully",
+            Data: data1
+            });
+
+        } catch (error) {
+            res.status(500).send({
+            message: "Internal server error",
+            error: error.message
+            });
     }
-    catch(error){
-        res.status(500).send({message:"Internal server error"});
-    }
+};
 }
     
-}
 export const Put=(Model)=>async(req,res)=>{
     try{
         const data=await Model.findByIdAndUpdate(req.params.id,req.body,{new:true});
@@ -98,8 +126,37 @@ export const get = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+// SEARCH PRODUCTS
+export const Search = (Model) => async (req, res) => {
+  try {
+    const { query } = req.params;
 
+    const data = await Model.find({
+      itemName: { $regex: query, $options: "i" }
+    });
 
-
-    
-
+    res.status(200).send({
+      message: "Search result fetched successfully",
+      data: data   // ✅ consistent key
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "Internal server error",
+      error: error.message
+    });
+  }
+}
+export const CartGet = (Model) => async (req, res) => {
+  try {
+    const data = await Model.find({ User: req.User }); // ✅ FILTER
+    res.status(200).send({
+      message: "Cart fetched successfully",
+      data: data
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: "Internal server error",
+      error: error.message
+    });
+  }
+};

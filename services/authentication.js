@@ -78,7 +78,7 @@ export const Authenticate = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded; // Attach user info to request
+    req.User = decoded.id;// Attach user info to request
     console.log("Decoded Token:", decoded);
     next();
   } catch (error) {
